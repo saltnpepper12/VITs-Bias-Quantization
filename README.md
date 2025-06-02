@@ -1,19 +1,19 @@
-# FairFace ViT/Swin Bias & Quantization Analysis
+# 🧑‍🤝‍🧑 FairFace ViT/Swin Bias & Quantization Analysis 🤖
 
-## Project Description
+## 📚 Project Description
 
-This project investigates the impact of INT8 quantization on model bias and accuracy for Vision Transformer (ViT) and Swin Transformer models trained on the FairFace dataset. The workflow covers model training, ONNX export, post-training quantization, and systematic validation. The main aim is to compare the fairness and performance of baseline (FP32) and INT8-quantized models across demographic groups, using robust, reproducible pipelines on Modal cloud infrastructure.
+This project investigates the impact of **INT8 quantization** on model bias and accuracy for Vision Transformer (ViT) and Swin Transformer models trained on the FairFace dataset. The workflow covers model training, ONNX export, post-training quantization, and systematic validation. The main aim is to compare the fairness and performance of baseline (FP32) and INT8-quantized models across demographic groups, using robust, reproducible pipelines on Modal cloud infrastructure.
 
-## Directory Structure & File Overview
+## 🗂️ Directory Structure & File Overview
 
 ```
 .
-├── Final-output-CSV-Files/
+├── Final-output-CSV-Files/              # 📊 Validation results
 │   ├── VIT-INT8-Quantized-Validation.csv
 │   ├── Swin-INT8-Quantized-Validation.csv
 │   ├── Swin-Base-validation.csv
 │   └── VIT-BASE-validation.csv
-├── model-files/
+├── model-files/                         # 🧩 Model files
 │   ├── base-model-onnx-files/
 │   │   ├── vit_fairface_best.onnx
 │   │   └── swin_fairface_best.onnx
@@ -23,39 +23,39 @@ This project investigates the impact of INT8 quantization on model bias and accu
 │   └── base-model-pth-files/
 │       ├── swinv2_fairface_best.pth
 │       └── vit_fairface_best.pth
-├── sample-test-pictures/
+├── sample-test-pictures/                # 🖼️ Sample images
 │   └── [Sample images for quick testing]
-├── calibration_images/
+├── calibration_images/                  # 🏷️ Calibration images
 │   └── calib_XXX.jpg
-├── INT8-Quant-VIT-Swin.ipynb
-├── validation-quantized-models.ipynb
-├── vit-fine-tuning.ipynb
-├── swin-fine-tuning.ipynb
-├── Swin-local-inference.ipynb
-├── vit-local-inference.ipynb
-├── export_swin_onnx.py
-├── extract_calibration_images.py
-├── modal_dataset.py
+├── INT8-Quant-VIT-Swin.ipynb            # 📒 Quantization notebook
+├── validation-quantized-models.ipynb    # 📒 Validation notebook
+├── vit-fine-tuning.ipynb                # 📒 ViT fine-tuning
+├── swin-fine-tuning.ipynb               # 📒 Swin fine-tuning
+├── Swin-local-inference.ipynb           # 📒 Swin local inference
+├── vit-local-inference.ipynb            # 📒 ViT local inference
+├── export_swin_onnx.py                  # 📝 Swin ONNX export script
+├── extract_calibration_images.py        # 📝 Calibration image extraction
+├── modal_dataset.py                     # 📝 Modal dataset utility
 └── __pycache__/
 ```
 
-## File & Folder Details
+## 📁 File & Folder Details
 
-### **Model Files**
+### 🧩 **Model Files**
 - `model-files/base-model-pth-files/`: PyTorch checkpoints for the best ViT and Swin models (`.pth`).
 - `model-files/base-model-onnx-files/`: Baseline (FP32) ONNX exports of the best models.
 - `model-files/INT8-Model-Quantized-Files/`: INT8-quantized ONNX models for ViT and Swin.
 
-### **Calibration Images**
+### 🏷️ **Calibration Images**
 - `calibration_images/`: 100+ images used for static quantization calibration.
 
-### **Sample Test Images**
+### 🖼️ **Sample Test Images**
 - `sample-test-pictures/`: Example images for quick inference and demo.
 
-### **Output CSVs**
+### 📊 **Output CSVs**
 - `Final-output-CSV-Files/`: Validation results for all models, including top-1/top-5 predictions and probabilities.
 
-### **Notebooks**
+### 📒 **Notebooks**
 - `vit-fine-tuning.ipynb`: Fine-tuning ViT on FairFace, saving best `.pth` model.
 - `swin-fine-tuning.ipynb`: Fine-tuning Swin on FairFace, saving best `.pth` model.
 - `INT8-Quant-VIT-Swin.ipynb`: Quantization workflows for both ViT and Swin (static/dynamic, INT8).
@@ -63,12 +63,12 @@ This project investigates the impact of INT8 quantization on model bias and accu
 - `vit-local-inference.ipynb`: Inference and validation for baseline ViT model.
 - `Swin-local-inference.ipynb`: Inference and validation for baseline Swin model.
 
-### **Scripts**
+### 📝 **Scripts**
 - `export_swin_onnx.py`: Exports Swin PyTorch model to ONNX.
 - `extract_calibration_images.py`: Extracts images from the dataset for calibration.
 - `modal_dataset.py`: Modal utility for dataset management.
 
-## **How to Use**
+## 🚀 **How to Use**
 
 1. **Train & Export Models:**  
    Use `vit-fine-tuning.ipynb` and `swin-fine-tuning.ipynb` to train and save `.pth` models.  
@@ -83,9 +83,11 @@ This project investigates the impact of INT8 quantization on model bias and accu
 4. **Results:**  
    All validation results are in `Final-output-CSV-Files/`, with top-1/top-5 predictions and probabilities for each sample.
 
-## **Project Aim**
+## 🎯 **Project Aim**
 
 The main goal is to **analyze and compare bias and accuracy between baseline and INT8-quantized ViT/Swin models** on the FairFace dataset, providing insight into the fairness and deployment-readiness of quantized vision transformers.
 
+---
+
 **For more details, see the individual notebooks and scripts.**  
-Let us know if you need help running or extending the analysis! 
+Let us know if you need help running or extending the analysis! 😊
