@@ -104,21 +104,21 @@ The design is a clean **2 × 2 factorial**: two architectures (**ViT**, **SwinV2
 ```mermaid
 flowchart TD
     subgraph DATA["1 · Data"]
-        D1["modal_dataset.py<br/>download HuggingFaceM4/FairFace"] --> D2["train.parquet<br/>validation.parquet"]
+        D1["scripts/download_dataset.py<br/>download HuggingFaceM4/FairFace"] --> D2["train.parquet<br/>validation.parquet"]
     end
     subgraph TRAIN["2 · Fine-tuning (Modal · A100)"]
-        T1["vit-fine-tuning.ipynb<br/>google/vit-base-patch16-224"] --> T3["best .pth"]
-        T2["swin-fine-tuning.ipynb<br/>microsoft/swinv2-base-patch4-window16-256"] --> T3
+        T1["01_finetune_vit.ipynb<br/>google/vit-base-patch16-224"] --> T3["best .pth"]
+        T2["01_finetune_swin.ipynb<br/>microsoft/swinv2-base-patch4-window16-256"] --> T3
     end
     subgraph EXPORT["3 · ONNX export"]
-        E1["export_swin_onnx.py<br/>(+ ViT export)"] --> E2["FP32 .onnx"]
+        E1["scripts/export_swin_onnx.py<br/>(+ ViT export)"] --> E2["FP32 .onnx"]
     end
     subgraph QUANT["4 · INT8 quantization"]
-        Q1["extract_calibration_images.py<br/>→ ~100 calibration imgs"] --> Q2["INT8-Quant-VIT-Swin.ipynb<br/>onnxruntime quantize_static"]
+        Q1["scripts/extract_calibration_images.py<br/>→ ~100 calibration imgs"] --> Q2["02_quantize_int8.ipynb<br/>onnxruntime quantize_static"]
         Q2 --> Q3["INT8 .onnx"]
     end
     subgraph EVAL["5 · Validation & analysis"]
-        V1["validation-quantized-models.ipynb<br/>+ local-inference notebooks"] --> V2["Final-output-CSV-Files/*.csv"]
+        V1["03_validate.ipynb<br/>+ 04_inference notebooks"] --> V2["results/*.csv"]
         V2 --> V3["per-group accuracy,<br/>fairness gap, confusion"]
     end
     D2 --> TRAIN --> EXPORT --> QUANT --> EVAL
@@ -143,28 +143,32 @@ flowchart TD
 .
 ├── README.md
 ├── requirements.txt
+├── make_figures.py                   # Rebuild every figure from results/ (no GPU)
 │
-├── modal_dataset.py                  # Download FairFace → parquet (Modal volume)
-├── extract_calibration_images.py     # Sample calibration images for static quant
-├── export_swin_onnx.py               # Export fine-tuned Swin .pth → ONNX
+├── scripts/                          # ⚙️ Reusable pipeline scripts
+│   ├── download_dataset.py           #   FairFace → parquet (Modal volume)
+│   ├── extract_calibration_images.py #   sample calibration imgs for static quant
+│   └── export_swin_onnx.py           #   fine-tuned Swin .pth → ONNX
 │
-├── vit-fine-tuning.ipynb             # Fine-tune ViT-Base on FairFace
-├── swin-fine-tuning.ipynb            # Fine-tune SwinV2-Base on FairFace
-├── INT8-Quant-VIT-Swin.ipynb         # Static INT8 quantization of both models
-├── validation-quantized-models.ipynb # Full-val validation → CSV
-├── vit-local-inference.ipynb         # Single-image ViT inference / demo
-├── Swin-local-inference.ipynb        # Single-image Swin inference / demo
+├── notebooks/                        # 📓 Pipeline, ordered by stage
+│   ├── 01_finetune_vit.ipynb         #   fine-tune ViT-Base on FairFace
+│   ├── 01_finetune_swin.ipynb        #   fine-tune SwinV2-Base on FairFace
+│   ├── 02_quantize_int8.ipynb        #   static INT8 quantization of both models
+│   ├── 03_validate.ipynb             #   full-val validation → results CSV
+│   ├── 04_inference_vit.ipynb        #   single-image ViT inference / demo
+│   └── 04_inference_swin.ipynb       #   single-image Swin inference / demo
 │
-├── Final-output-CSV-Files/           # 📊 Raw results — one row per val image
-│   ├── VIT-BASE-validation.csv
-│   ├── VIT-INT8-Quantized-Validation.csv
-│   ├── Swin-Base-validation.csv
-│   └── Swin-INT8-Quantized-Validation.csv
+├── results/                          # 📊 Raw results — one row per val image
+│   ├── vit_fp32_validation.csv
+│   ├── vit_int8_validation.csv
+│   ├── swin_fp32_validation.csv
+│   └── swin_int8_validation.csv
 │
 ├── assets/                           # 📈 Generated analysis figures
 │   └── 01..05_*.png
 │
-└── sample-test-pictures/             # 🖼️ Example faces for quick local inference
+└── data/
+    └── sample-faces/                 # 🖼️ Example faces for quick local inference
 ```
 
 > **Note on weights:** the fine-tuned `.pth` / `.onnx` checkpoints and the FairFace parquet files are **not** committed (too large, and the data is redistributable only from its original source). Regenerate them by running the notebooks in order — every step is reproducible from the scripts here. See `.gitignore`.
@@ -173,7 +177,7 @@ flowchart TD
 
 ## 🔁 Reproducing the Analysis
 
-The four CSVs in `Final-output-CSV-Files/` are the raw per-image predictions for all four models. The figures in `assets/` are generated entirely from them — no GPU or model weights required:
+The four CSVs in `results/` are the raw per-image predictions for all four models. The figures in `assets/` are generated entirely from them — no GPU or model weights required:
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
@@ -185,12 +189,12 @@ To reproduce the models from scratch (GPU / Modal account needed):
 
 ```bash
 pip install -r requirements.txt
-python modal_dataset.py                  # 1. download FairFace
-# 2. run vit-fine-tuning.ipynb & swin-fine-tuning.ipynb (Modal A100)
-python export_swin_onnx.py               # 3. export to ONNX
-python extract_calibration_images.py     # 4a. build calibration set
-# 4b. run INT8-Quant-VIT-Swin.ipynb       # quantize to INT8
-# 5. run validation-quantized-models.ipynb → Final-output-CSV-Files/
+python scripts/download_dataset.py            # 1. download FairFace
+# 2. run notebooks/01_finetune_vit.ipynb & 01_finetune_swin.ipynb (Modal A100)
+python scripts/export_swin_onnx.py            # 3. export to ONNX
+python scripts/extract_calibration_images.py  # 4a. build calibration set
+# 4b. run notebooks/02_quantize_int8.ipynb     # quantize to INT8
+# 5. run notebooks/03_validate.ipynb → results/
 ```
 
 ---

@@ -2,7 +2,7 @@
 make_figures.py
 ---------------
 Regenerate every chart in assets/ directly from the raw per-image prediction
-CSVs in Final-output-CSV-Files/. No GPU, model weights, or dataset required.
+CSVs in results/. No GPU, model weights, or dataset required.
 
     pip install pandas matplotlib numpy
     python make_figures.py
@@ -34,15 +34,15 @@ SHORT = {"White": "White", "Black": "Black", "Latino_Hispanic": "Latino",
          "Indian": "Indian", "Middle Eastern": "Mid. East"}
 
 MODELS = {
-    "ViT FP32":  "VIT-BASE-validation",
-    "ViT INT8":  "VIT-INT8-Quantized-Validation",
-    "Swin FP32": "Swin-Base-validation",
-    "Swin INT8": "Swin-INT8-Quantized-Validation",
+    "ViT FP32":  "vit_fp32_validation",
+    "ViT INT8":  "vit_int8_validation",
+    "Swin FP32": "swin_fp32_validation",
+    "Swin INT8": "swin_int8_validation",
 }
 COLORS = {"ViT FP32": "#2563eb", "ViT INT8": "#93c5fd",
           "Swin FP32": "#16a34a", "Swin INT8": "#86efac"}
 
-CSV_DIR = "Final-output-CSV-Files"
+CSV_DIR = "results"
 OUT_DIR = "assets"
 
 plt.rcParams.update({
