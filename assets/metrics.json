@@ -1,0 +1,70 @@
+{
+  "ViT FP32": {
+    "overall": 72.06,
+    "top5": 99.21,
+    "per_group": {
+      "White": 76.65,
+      "Black": 79.42,
+      "Latino_Hispanic": 86.76,
+      "East Asian": 76.16,
+      "Southeast Asian": 69.89,
+      "Indian": 55.33,
+      "Middle Eastern": 58.02
+    },
+    "gap": 31.43,
+    "std": 10.62,
+    "min": 55.33,
+    "max": 86.76
+  },
+  "ViT INT8": {
+    "overall": 67.99,
+    "top5": 98.63,
+    "per_group": {
+      "White": 77.48,
+      "Black": 73.55,
+      "Latino_Hispanic": 86.83,
+      "East Asian": 75.16,
+      "Southeast Asian": 65.18,
+      "Indian": 41.53,
+      "Middle Eastern": 53.14
+    },
+    "gap": 45.3,
+    "std": 14.41,
+    "min": 41.53,
+    "max": 86.83
+  },
+  "Swin FP32": {
+    "overall": 71.94,
+    "top5": 99.3,
+    "per_group": {
+      "White": 69.55,
+      "Black": 76.32,
+      "Latino_Hispanic": 89.72,
+      "East Asian": 77.79,
+      "Southeast Asian": 71.55,
+      "Indian": 52.8,
+      "Middle Eastern": 63.96
+    },
+    "gap": 36.91,
+    "std": 10.72,
+    "min": 52.8,
+    "max": 89.72
+  },
+  "Swin INT8": {
+    "overall": 70.89,
+    "top5": 99.17,
+    "per_group": {
+      "White": 67.03,
+      "Black": 68.8,
+      "Latino_Hispanic": 90.75,
+      "East Asian": 80.19,
+      "Southeast Asian": 60.55,
+      "Indian": 57.67,
+      "Middle Eastern": 65.8
+    },
+    "gap": 33.07,
+    "std": 10.71,
+    "min": 57.67,
+    "max": 90.75
+  }
+}

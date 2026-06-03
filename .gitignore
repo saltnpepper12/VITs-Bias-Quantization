@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.venv_charts/
+venv/
+env/
+*.egg-info/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Model weights & exports (too large for git — regenerate via the notebooks)
+model-files/
+*.pth
+*.onnx
+
+# Calibration / data artifacts
+calibration_images/
+*.parquet
+
+# OS
+.DS_Store
+Thumbs.db
